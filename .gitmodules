@@ -1,0 +1,3 @@
+[submodule "extensions/sovity"]
+	path = extensions/sovity
+	url = https://github.com/sovity/edc-extensions

@@ -1,0 +1,52 @@
+version: "3"
+services:
+  edc:
+    container_name: edc
+    build:
+      context: ./connector
+    environment:
+      - MY_EDC_NAME
+      - MY_EDC_FQDN
+      - MY_EDC_PROTOCOL
+      - EDC_KEYSTORE_PASSWORD
+      - EDC_API_AUTH_KEY
+      - EDC_OAUTH_CLIENT_ID
+      - EDC_OAUTH_PROVIDER_JWKS_URL
+      - EDC_OAUTH_TOKEN_URL
+    ports:
+      - 11001:11001
+      - 11002:11002
+      - 11003:11003
+      - 11004:11004
+      - 11005:11005
+    volumes:
+      - ./vault:/vault
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  backend:
+    container_name: backend
+    image: nginx:latest
+    ports:
+      - 8080:80
+    volumes:
+      - ./backend/nginx.conf.template:/etc/nginx/templates/default.conf.template
+      - ./backend/assets:/assets
+
+  edc-another:
+    container_name: edc-another
+    build:
+      context: ./connector
+    env_file:
+      - ./.env_another
+    ports:
+      - 21001:11001
+      - 21002:11002
+      - 21003:11003
+      - 21004:11004
+      - 21005:11005
+    volumes:
+      - ./demo:/vault
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    profiles: ["demo"]

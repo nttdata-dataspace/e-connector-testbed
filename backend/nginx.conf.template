@@ -1,0 +1,6 @@
+server {
+  listen 80;
+  root /assets;
+  charset UTF-8;
+  autoindex on;
+}
