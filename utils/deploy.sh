@@ -28,7 +28,7 @@ if [ -z ${OUTDIR} ]; then
     OUTDIR=./vault
 fi
 if [ -z ${EDC_KEYSTORE_PASSWORD} ]; then
-    EDC_KEYSTORE_PASSWORD=test1234
+    eval $(grep EDC_KEYSTORE_PASSWORD ./connector/.env)
 fi
 
 read -p "The contents of the output directory will be overwritten. Do you wish to continue? " -n 1 -r
@@ -45,7 +45,7 @@ openssl req -x509 -newkey rsa:2048 -noenc -days 1000 -subj "${SUBJ_ARG}" \
 openssl pkcs12 -export -password pass:${EDC_KEYSTORE_PASSWORD} -name ${MY_EDC_NAME} \
 	-inkey ${OUTDIR}/key.pem -in ${OUTDIR}/cert.pem \
 	-out ${OUTDIR}/keystore.p12
-mv -f ${OUTDIR}/keystore.jks{,-}
+mv -f ${OUTDIR}/keystore.jks{,-} 2>/dev/null
 keytool -noprompt -importkeystore \
 	-srcstoretype pkcs12 -srckeystore ${OUTDIR}/keystore.p12 -srcstorepass ${EDC_KEYSTORE_PASSWORD} \
 	-deststoretype jks -destkeystore ${OUTDIR}/keystore.jks -deststorepass ${EDC_KEYSTORE_PASSWORD}
@@ -60,4 +60,4 @@ for key in MY_EDC_NAME MY_EDC_FQDN EDC_KEYSTORE_PASSWORD EDC_API_AUTH_KEY EDC_OA
 	echo $key=${!var}
     fi
 done
-
+exit 0
