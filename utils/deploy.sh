@@ -27,6 +27,9 @@ if [ -z ${OUTDIR} ]; then
     echo "No output directory is specified; ./vault is assumed to be the output directory."
     OUTDIR=./vault
 fi
+if [ -z ${EDC_API_AUTH_KEY} ]; then
+    eval $(grep EDC_API_AUTH_KEY ./connector/.env)
+fi
 if [ -z ${EDC_KEYSTORE_PASSWORD} ]; then
     eval $(grep EDC_KEYSTORE_PASSWORD ./connector/.env)
 fi
