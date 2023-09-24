@@ -1,5 +1,6 @@
-rootProject.name = "e_connector_testbed"
+rootProject.name = "e-connector-testbed"
 include(":connector")
+include(":extensions:testbed")
 
 dependencyResolutionManagement {
     repositories {

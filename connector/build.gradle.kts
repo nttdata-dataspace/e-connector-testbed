@@ -43,6 +43,7 @@ dependencies {
     implementation("${txEdcGroup}:edr-callback:${txEdcVersion}")
 
     implementation("${sovityEdcGroup}:policy-referring-connector:${sovityEdcVersion}")
+    implementation(project(":extensions:testbed"))
 }
 
 application {
@@ -50,6 +51,7 @@ application {
 }
 
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    exclude("de/sovity/edc/extension/policy/ReferringConnectorValidationExtension.class")
     mergeServiceFiles()
     archiveFileName.set("connector.jar")
 }
