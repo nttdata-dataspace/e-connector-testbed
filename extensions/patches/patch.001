@@ -1,0 +1,16 @@
+diff --git a/extensions/policy-referring-connector/build.gradle.kts b/extensions/policy-referring-connector/build.gradle.kts
+index 80ccc5a..39ae64b 100644
+--- a/extensions/policy-referring-connector/build.gradle.kts
++++ b/extensions/policy-referring-connector/build.gradle.kts
+@@ -25,6 +25,11 @@ tasks.withType<Test> {
+ val sovityEdcExtensionGroup: String by project
+ group = sovityEdcExtensionGroup
+ 
++val jar by tasks.getting(Jar::class) {
++    exclude("de/sovity/edc/extension/policy/ReferringConnectorValidationExtension.class")
++    exclude("META-INF/services/org.eclipse.edc.spi.system.ServiceExtension")
++}
++
+ publishing {
+     publications {
+         create<MavenPublication>(project.name) {
