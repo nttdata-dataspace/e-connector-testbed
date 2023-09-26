@@ -21,7 +21,19 @@ curl -s -H "X-Api-Key: ApiKeyDefaultValue" -H "Content-Type: application/json" \
              "assetId": "asset-test-1",
              "policy": {
                "@type": "odrl:Set",
-               "odrl:permission": [],
+               "odrl:permission": {
+                 "odrl:target": "asset-test-1",
+                 "odrl:action": {
+                   "odrl:type": "USE"
+                 },
+                 "odrl:constraint": {
+                   "odrl:leftOperand": "REFERRING_CONNECTOR",
+                   "odrl:operator": {
+                     "@id": "odrl:eq"
+                   },
+                   "odrl:rightOperand": "http://another-connector"
+                 }
+               },
                "odrl:prohibition": [],
                "odrl:obligation": [],
                "odrl:target": "asset-test-1"
