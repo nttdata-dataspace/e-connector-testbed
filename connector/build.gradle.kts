@@ -27,7 +27,8 @@ dependencies {
     implementation("${edcGroup}:oauth2-daps:${edcVersion}")
 
     implementation("${edcGroup}:data-plane-core:${edcVersion}")
-    implementation("${edcGroup}:data-plane-api:${edcVersion}")
+    //implementation("${edcGroup}:data-plane-api:${edcVersion}")
+    implementation(project(":extensions:data-plane-api"))
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
     implementation("${edcGroup}:transfer-pull-http-dynamic-receiver:${edcVersion}")
     implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
@@ -43,7 +44,7 @@ dependencies {
     implementation("${txEdcGroup}:edr-callback:${txEdcVersion}")
 
     implementation("${sovityEdcGroup}:policy-referring-connector:${sovityEdcVersion}")
-    implementation(project(":extensions:testbed"))
+    implementation(project(":extensions:policies"))
 }
 
 application {

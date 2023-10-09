@@ -1,6 +1,7 @@
 rootProject.name = "e-connector-testbed"
 include(":connector")
-include(":extensions:testbed")
+include(":extensions:policies")
+include(":extensions:data-plane-api")
 
 dependencyResolutionManagement {
     repositories {
