@@ -46,7 +46,7 @@ import static com.nttdata.gtds.edc.extension.dataplane.api.response.ResponseFunc
 import static com.nttdata.gtds.edc.extension.dataplane.api.response.ResponseFunctions.validationError;
 
 @Path("{any:.*}")
-@Produces(MediaType.APPLICATION_OCTET_STREAM)
+@Produces(MediaType.APPLICATION_JSON)
 public class DataPlanePublicApiController implements DataPlanePublicApi {
 
     private final DataPlaneManager dataPlaneManager;
@@ -147,7 +147,7 @@ public class DataPlanePublicApiController implements DataPlanePublicApi {
                 .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         if (result.succeeded()) {
-                            response.resume(Response.ok(stream.toByteArray()).build());
+                            response.resume(Response.ok(stream.toByteArray(), MediaType.APPLICATION_OCTET_STREAM).build());
                         } else {
                             response.resume(internalErrors(result.getFailureMessages()));
                         }
