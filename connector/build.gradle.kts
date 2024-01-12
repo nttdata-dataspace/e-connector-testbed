@@ -13,7 +13,8 @@ val sovityEdcVersion: String by project
 
 dependencies {
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
-    implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
+    //implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
+    implementation("${edcGroup}:control-plane-api-client:${edcVersion}")
     implementation("${edcGroup}:callback-event-dispatcher:${edcVersion}")
     implementation("${edcGroup}:callback-http-dispatcher:${edcVersion}")
     implementation("${edcGroup}:management-api:${edcVersion}")
@@ -29,12 +30,14 @@ dependencies {
     implementation("${edcGroup}:data-plane-core:${edcVersion}")
     //implementation("${edcGroup}:data-plane-api:${edcVersion}")
     implementation(project(":extensions:data-plane-api"))
+    implementation(project(":extensions:data-plane-annex-util"))
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
     implementation("${edcGroup}:transfer-pull-http-dynamic-receiver:${edcVersion}")
     implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
     implementation("${edcGroup}:data-plane-selector-api:${edcVersion}")
     implementation("${edcGroup}:data-plane-selector-client:${edcVersion}")
     implementation("${edcGroup}:data-plane-http:${edcVersion}")
+    implementation("${edcGroup}:validator-data-address-http-data:${edcVersion}")
 
     implementation("${txEdcGroup}:dataplane-selector-configuration:${txEdcVersion}")
     implementation("${txEdcGroup}:cx-oauth2:${txEdcVersion}")
@@ -42,6 +45,13 @@ dependencies {
     implementation("${txEdcGroup}:edr-cache-core:${txEdcVersion}")
     implementation("${txEdcGroup}:edr-api:${txEdcVersion}")
     implementation("${txEdcGroup}:edr-callback:${txEdcVersion}")
+
+    implementation(libs.postgres)
+    implementation("${edcGroup}:sql-core:${edcVersion}")
+    implementation("${edcGroup}:sql-pool-apache-commons:${edcVersion}")
+    implementation("${edcGroup}:transaction-local:${edcVersion}")
+    implementation("${edcGroup}:control-plane-sql:${edcVersion}")
+    implementation("${txEdcGroup}:edr-cache-sql:${txEdcVersion}")
 
     implementation("${sovityEdcGroup}:policy-referring-connector:${sovityEdcVersion}")
     implementation(project(":extensions:policies"))

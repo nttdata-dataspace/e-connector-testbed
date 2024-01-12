@@ -15,6 +15,7 @@ dependencies {
     api("${edcGroup}:http-spi:${edcVersion}")
     api("${edcGroup}:web-spi:${edcVersion}")
     api("${edcGroup}:data-plane-spi:${edcVersion}")
+    implementation(project(":extensions:data-plane-annex-util"))
     implementation("${edcGroup}:data-plane-util:${edcVersion}")
     implementation("${edcGroup}:control-api-configuration:${edcVersion}")
 

@@ -29,16 +29,12 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.edc.connector.dataplane.spi.manager.DataPlaneManager;
+import org.eclipse.edc.connector.dataplane.spi.pipeline.PipelineService;
 import org.eclipse.edc.connector.dataplane.spi.resolver.DataAddressResolver;
-import org.eclipse.edc.connector.dataplane.util.sink.OutputStreamDataSink;
-import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.web.spi.exception.NotAuthorizedException;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import static java.lang.String.format;
 import static java.lang.String.join;
@@ -49,21 +45,15 @@ import static com.nttdata.gtds.edc.extension.dataplane.api.response.ResponseFunc
 @Produces(MediaType.APPLICATION_JSON)
 public class DataPlanePublicApiController implements DataPlanePublicApi {
 
-    private final DataPlaneManager dataPlaneManager;
+    private final PipelineService pipelineService;
     private final DataAddressResolver dataAddressResolver;
     private final DataFlowRequestSupplier requestSupplier;
-    private final Monitor monitor;
-    private final ExecutorService executorService;
 
-    public DataPlanePublicApiController(DataPlaneManager dataPlaneManager,
-                                        DataAddressResolver dataAddressResolver,
-                                        Monitor monitor,
-                                        ExecutorService executorService) {
-        this.dataPlaneManager = dataPlaneManager;
+    public DataPlanePublicApiController(PipelineService pipelineService,
+                                        DataAddressResolver dataAddressResolver) {
+        this.pipelineService = pipelineService;
         this.dataAddressResolver = dataAddressResolver;
         this.requestSupplier = new DataFlowRequestSupplier();
-        this.monitor = monitor;
-        this.executorService = executorService;
     }
 
     @GET
@@ -131,7 +121,7 @@ public class DataPlanePublicApiController implements DataPlanePublicApi {
         var dataAddress = extractSourceDataAddress(token);
         var dataFlowRequest = requestSupplier.apply(contextApi, dataAddress);
 
-        var validationResult = dataPlaneManager.validate(dataFlowRequest);
+        var validationResult = pipelineService.validate(dataFlowRequest);
         if (validationResult.failed()) {
             var errorMsg = validationResult.getFailureMessages().isEmpty() ?
                     format("Failed to validate request with id: %s", dataFlowRequest.getId()) :
@@ -140,14 +130,11 @@ public class DataPlanePublicApiController implements DataPlanePublicApi {
             return;
         }
 
-        var stream = new ByteArrayOutputStream();
-        var sink = new OutputStreamDataSink(dataFlowRequest.getId(), stream, executorService, monitor);
-
-        dataPlaneManager.transfer(sink, dataFlowRequest)
+        pipelineService.transfer(dataFlowRequest)
                 .whenComplete((result, throwable) -> {
                     if (throwable == null) {
                         if (result.succeeded()) {
-                            response.resume(Response.ok(stream.toByteArray(), MediaType.APPLICATION_OCTET_STREAM).build());
+                            response.resume(Response.ok(result.getContent(), MediaType.APPLICATION_OCTET_STREAM).build());
                         } else {
                             response.resume(internalErrors(result.getFailureMessages()));
                         }

@@ -14,3 +14,25 @@ index 80ccc5a..39ae64b 100644
  publishing {
      publications {
          create<MavenPublication>(project.name) {
+diff --git a/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java b/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java
+index 8fb09c3..a267fdb 100644
+--- a/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java
++++ b/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java
+@@ -27,6 +27,7 @@ package de.sovity.edc.extension.policy.functions;
+ import org.eclipse.edc.policy.engine.spi.PolicyContext;
+ import org.eclipse.edc.policy.model.Operator;
+ import org.eclipse.edc.spi.monitor.Monitor;
++import org.eclipse.edc.spi.agent.ParticipantAgent;
+ 
+ import java.util.Arrays;
+ import java.util.List;
+@@ -69,7 +70,8 @@ public abstract class AbstractReferringConnectorValidation {
+             return false;
+         }
+ 
+-        final var claims = policyContext.getParticipantAgent().getClaims();
++        // final var claims = policyContext.getParticipantAgent().getClaims();
++        final var claims = policyContext.getContextData(ParticipantAgent.class).getClaims();
+ 
+         if (!claims.containsKey(REFERRING_CONNECTOR_CLAIM)) {
+             return false;

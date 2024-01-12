@@ -14,7 +14,7 @@
 
 package com.nttdata.gtds.edc.extension.dataplane.api.controller;
 
-import org.eclipse.edc.connector.dataplane.util.sink.OutputStreamDataSinkFactory;
+import com.nttdata.gtds.edc.extension.dataplane.annex.sink.RawOutputStreamDataSinkFactory;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.transfer.DataFlowRequest;
 
@@ -46,7 +46,7 @@ public class DataFlowRequestSupplier implements BiFunction<ContainerRequestConte
                 .processId(UUID.randomUUID().toString())
                 .sourceDataAddress(dataAddress)
                 .destinationDataAddress(DataAddress.Builder.newInstance()
-                        .type(OutputStreamDataSinkFactory.TYPE)
+                        .type(RawOutputStreamDataSinkFactory.TYPE)
                         .build())
                 .trackable(false)
                 .id(UUID.randomUUID().toString())
