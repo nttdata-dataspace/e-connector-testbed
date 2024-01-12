@@ -12,9 +12,9 @@ curl -s -H "X-Api-Key: ApiKeyDefaultValue" -H "Content-Type: application/json" \
              "odrl": "http://www.w3.org/ns/odrl/2/"
            },
            "@type": "NegotiationInitiateRequestDto",
-           "connectorAddress": "http://'${MY_EDC_FQDN}':11003/api/v1/dsp",
+           "counterPartyId": "'${MY_EDC_NAME}'",
+           "counterPartyAddress": "http://'${MY_EDC_FQDN}':11003/api/v1/dsp",
            "protocol": "dataspace-protocol-http",
-           "connectorId": "'${MY_EDC_NAME}'",
            "providerId": "'${MY_EDC_NAME}'",
            "offer": {
              "offerId": "'${OFFER_ID}'",
