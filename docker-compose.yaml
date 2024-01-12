@@ -23,6 +23,8 @@ services:
       - ./vault:/vault
     extra_hosts:
       - host.docker.internal:host-gateway
+    depends_on:
+      - db
 
   backend:
     container_name: backend
@@ -33,12 +35,25 @@ services:
       - ./backend/nginx.conf.template:/etc/nginx/templates/default.conf.template
       - ./backend/assets:/assets
 
+  db:
+    container_name: postgresql
+    image: postgres:16
+    env_file:
+      - ./connector/.env_postgresql
+    expose:
+      - 5432
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
+
   edc-another:
     container_name: edc-another
     build:
       context: ./connector
     env_file:
       - ./.env_another
+    environment:
+      - EDC_EDR_STATE-MACHINE_EXPIRED-RETENTION=5
     ports:
       - 21001:11001
       - 21002:11002
@@ -49,4 +64,18 @@ services:
       - ./demo:/vault
     extra_hosts:
       - host.docker.internal:host-gateway
+    depends_on:
+      - db-another
+    profiles: ["demo"]
+
+  db-another:
+    container_name: postgresql-another
+    image: postgres:16
+    env_file:
+      - ./connector/.env_postgresql
+    expose:
+      - 5432
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./demo/data:/var/lib/postgresql/data
     profiles: ["demo"]
