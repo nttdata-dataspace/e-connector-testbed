@@ -42,9 +42,12 @@ services:
       - ./connector/.env_postgresql
     expose:
       - 5432
+    user: ${POSTGRES_UID}:${POSTGRES_GID}
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ./db/data:/var/lib/postgresql/data
+      - ./db/home:/home/${LOGNAME}
+      - /etc/passwd:/etc/passwd:ro
 
   edc-another:
     container_name: edc-another
@@ -75,7 +78,10 @@ services:
       - ./connector/.env_postgresql
     expose:
       - 5432
+    user: ${POSTGRES_UID}:${POSTGRES_GID}
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ./demo/data:/var/lib/postgresql/data
+      - ./demo/home:/home/${LOGNAME}
+      - /etc/passwd:/etc/passwd:ro
     profiles: ["demo"]

@@ -55,9 +55,13 @@ keytool -noprompt -importkeystore \
 EDC_OAUTH_CLIENT_ID=$(openssl x509 -in ${OUTDIR}/cert.pem -text | sed -n -e '/Subject Key Identifier/{n;s/$/:keyid:/;p}' -e '/Authority Key Identifier/{n;p}' | tr -d ' \n')
 echo ${MY_EDC_NAME}=$(sed ':a;N;$!ba;s/\n/\\n/g' ${OUTDIR}/cert.pem) > ${OUTDIR}/vault.properties
 
+POSTGRES_UID=$(id -u)
+POSTGRES_GID=$(id -g)
+mkdir ./db/data ./db/home ./demo/data ./demo/home 2>/dev/null
+
 echo -e "\nAdd the following lines to the .env file"
 echo      "----------------------------------------"
-for key in MY_EDC_NAME MY_EDC_FQDN EDC_KEYSTORE_PASSWORD EDC_API_AUTH_KEY EDC_OAUTH_CLIENT_ID; do
+for key in MY_EDC_NAME MY_EDC_FQDN EDC_KEYSTORE_PASSWORD EDC_API_AUTH_KEY EDC_OAUTH_CLIENT_ID POSTGRES_UID POSTGRES_GID; do
     var=$key
     if [ ! -z ${!var} ]; then
 	echo $key=${!var}
