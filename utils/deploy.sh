@@ -57,11 +57,13 @@ echo ${MY_EDC_NAME}=$(sed ':a;N;$!ba;s/\n/\\n/g' ${OUTDIR}/cert.pem) > ${OUTDIR}
 
 POSTGRES_UID=$(id -u)
 POSTGRES_GID=$(id -g)
+CONNECTOR_UID=${POSTGRES_UID}
+CONNECTOR_GID=${POSTGRES_GID}
 mkdir ./db/data ./db/home ./demo/data ./demo/home 2>/dev/null
 
 echo -e "\nAdd the following lines to the .env file"
 echo      "----------------------------------------"
-for key in MY_EDC_NAME MY_EDC_FQDN EDC_KEYSTORE_PASSWORD EDC_API_AUTH_KEY EDC_OAUTH_CLIENT_ID POSTGRES_UID POSTGRES_GID; do
+for key in MY_EDC_NAME MY_EDC_FQDN EDC_KEYSTORE_PASSWORD EDC_API_AUTH_KEY EDC_OAUTH_CLIENT_ID CONNECTOR_UID CONNECTOR_GID POSTGRES_UID POSTGRES_GID; do
     var=$key
     if [ ! -z ${!var} ]; then
 	echo $key=${!var}

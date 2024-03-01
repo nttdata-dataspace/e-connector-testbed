@@ -13,12 +13,14 @@ services:
       - EDC_OAUTH_CLIENT_ID
       - EDC_OAUTH_PROVIDER_JWKS_URL
       - EDC_OAUTH_TOKEN_URL
+      - EDC_EDR_STATE-MACHINE_EXPIRED-RETENTION=5
     ports:
       - 11001:11001
       - 11002:11002
       - 11003:11003
       - 11004:11004
       - 11005:11005
+    user: ${CONNECTOR_UID}:${CONNECTOR_GID}
     volumes:
       - ./vault:/vault
     extra_hosts:
@@ -63,6 +65,7 @@ services:
       - 21003:11003
       - 21004:11004
       - 21005:11005
+    user: ${CONNECTOR_UID}:${CONNECTOR_GID}
     volumes:
       - ./demo:/vault
     extra_hosts:
