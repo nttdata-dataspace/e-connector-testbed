@@ -11,12 +11,10 @@ curl -s -H "X-Api-Key: ApiKeyDefaultValue" -H "Content-Type: application/json" \
            },
            "@type": "TransferRequestDto",
            "connectorId": "another-connector",
-           "connectorAddress": "http://edc:11003/api/v1/dsp",
+           "counterPartyAddress": "http://edc:11003/api/v1/dsp",
            "contractId": "'${AGREEMENT_ID}'",
            "assetId": "asset-test-1",
            "protocol": "dataspace-protocol-http",
-           "dataDestination": {
-             "type": "HttpProxy"
-           }
+           "transferType": "HttpData-PULL"
          }' \
-     -X POST http://localhost:21002/api/management/v2/transferprocesses | jq
+     -X POST http://localhost:21002/api/management/v3/transferprocesses | jq

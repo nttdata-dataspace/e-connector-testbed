@@ -1,7 +1,7 @@
 #! /bin/bash
 source .env || exit 1
 
-token_url="http://localhost/auth/token"
+token_url=${EDC_OAUTH_TOKEN_URL/host.docker.internal/localhost}
 client_id=${EDC_OAUTH_CLIENT_ID}
 # resource is later used as token audience, so it must be the IDS url of the token receiving connector
 resource="https://receiving-connector/api/v1/ids/data"
@@ -20,7 +20,8 @@ hmacsha256_sign()
 	printf '%s' "${input}" | openssl dgst -binary -sha256 -hmac "${secret}"
 }
 
-audience="idsc:IDS_CONNECTORS_ALL"
+#audience="idsc:IDS_CONNECTORS_ALL"
+audience=${EDC_OAUTH_PROVIDER_AUDIENCE}
 header="{\"alg\": \"RS256\", \"typ\": \"JWT\"}"
 payload="{\"iss\": \"${client_id}\",\"sub\":\"${client_id}\", \"exp\": 9999999999, \"iat\": 0, \"jti\": \"$(uuidgen)\", \"aud\": \"${audience}\"}"
 echo ${payload}
@@ -40,4 +41,4 @@ scope="idsc:IDS_CONNECTOR_ATTRIBUTES_ALL"
 curl -s -X POST ${token_url} \
    -H "Content-Type: application/x-www-form-urlencoded" \
    -H "Accept: application/json" \
-   -d "grant_type=${grant_type}&client_assertion_type=${client_assertion_type}&resource=${resource}&scope=${scope}&client_assertion=${jwt}"
+   -d "grant_type=${grant_type}&client_assertion_type=${client_assertion_type}&resource=${resource}&scope=${scope}&client_assertion=${jwt}" && echo

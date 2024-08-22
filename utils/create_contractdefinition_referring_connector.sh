@@ -18,4 +18,4 @@ curl -s -H "X-Api-Key: ${EDC_API_AUTH_KEY}" -H "Content-Type: application/json" 
              }
            ]
          }' \
-     -X POST http://localhost:11002/api/management/v2/contractdefinitions | jq
+     -X POST http://localhost:11002/api/management/v3/contractdefinitions | jq

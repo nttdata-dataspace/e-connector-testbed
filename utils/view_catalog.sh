@@ -5,8 +5,9 @@ curl -s -H "X-Api-Key: ${EDC_API_AUTH_KEY}" -H "Content-Type: application/json" 
      -d '{
            "@context": {
              "edc": "https://w3id.org/edc/v0.0.1/ns/"
-           },
-           "counterPartyAddress": "http://'${MY_EDC_FQDN}':11003/api/v1/dsp",
-           "protocol": "dataspace-protocol-http"
+            },
+            "@type": "QuerySpec",
+            "offset": 0,
+            "limit": 100
          }' \
-     -X POST http://localhost:11002/api/management/v3/catalog/request | jq
+     -X POST http://localhost:11006/api/catalog/v1alpha/catalog/query | jq

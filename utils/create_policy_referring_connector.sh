@@ -9,6 +9,8 @@ curl -s -H "X-Api-Key: ${EDC_API_AUTH_KEY}" -H "Content-Type: application/json" 
            },
            "@id": "policy-test-2",
            "policy": {
+             "@context": "http://www.w3.org/ns/odrl.jsonld",
+             "@type": "Set",
              "odrl:permission": [
                {
                  "odrl:action": {
@@ -27,4 +29,4 @@ curl -s -H "X-Api-Key: ${EDC_API_AUTH_KEY}" -H "Content-Type: application/json" 
              ]
            }
          }' \
-     -X POST http://localhost:11002/api/management/v2/policydefinitions | jq
+     -X POST http://localhost:11002/api/management/v3/policydefinitions | jq
