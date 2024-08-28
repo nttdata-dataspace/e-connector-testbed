@@ -34,6 +34,7 @@ if [ -z ${OUTDIR} ]; then
     echo "No output directory is specified; ./vault is assumed to be the output directory."
     OUTDIR=./vault
 fi
+mkdir -p ${OUTDIR} 2>/dev/null
 if [ -z ${EDC_API_AUTH_KEY} ]; then
     eval $(grep EDC_API_AUTH_KEY ./connector/.env)
 fi
@@ -56,11 +57,15 @@ if [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
     exit 1
 fi
 
-echo -e "\nGenerating a new key and certificate..."
-SUBJ_ARG="/C=JP/ST=Tokyo/L=Bunkyo-ku/O=Hongo/OU=International Testbed of Dataspace Technology/CN=${MY_EDC_NAME}"
+if [ -f ${OUTDIR}/key.pem ] && [ -f ${OUTDIR}/cert.pem ]; then
+  echo -e "\nA private key/certificate pair detected. The pair is preserved and a new keystore will be created."
+else
+  echo -e "\nGenerating a new key and certificate..."
+  SUBJ_ARG="/C=JP/ST=Tokyo/L=Bunkyo-ku/O=Hongo/OU=International Testbed of Dataspace Technology/CN=${MY_EDC_FQDN:-${MY_EDC_NAME}}"
 
-${OPENSSL_PATH} req -x509 -newkey rsa:2048 -noenc -days 1000 -subj "${SUBJ_ARG}" \
+  ${OPENSSL_PATH} req -x509 -newkey rsa:2048 -noenc -days 1000 -subj "${SUBJ_ARG}" \
         -keyout ${OUTDIR}/key.pem -out ${OUTDIR}/cert.pem
+fi
 ${OPENSSL_PATH} pkcs12 -export -password pass:${EDC_KEYSTORE_PASSWORD} -name ${MY_EDC_NAME} \
         -inkey ${OUTDIR}/key.pem -in ${OUTDIR}/cert.pem \
         -out ${OUTDIR}/keystore.p12
@@ -79,7 +84,7 @@ POSTGRES_UID=$(id -u)
 POSTGRES_GID=$(id -g)
 CONNECTOR_UID=${POSTGRES_UID}
 CONNECTOR_GID=${POSTGRES_GID}
-mkdir ./db/data ./db/home ./demo/data ./demo/home 2>/dev/null
+mkdir -p ./db/data ./db/home ./demo/data ./demo/home 2>/dev/null
 
 echo -e "\nAdd the following lines to the .env file"
 echo      "----------------------------------------"
