@@ -1,10 +1,23 @@
 rootProject.name = "e-connector-testbed"
 include(":connector")
-include(":extensions:policies")
-include(":extensions:data-plane-api")
-include(":extensions:data-plane-annex-util")
+include(":extensions:vault-fs")
+include(":extensions:oauth2-core")
+include(":extensions:federated-catalog-filebased")
+
+pluginManagement {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
 
 dependencyResolutionManagement {
+    versionCatalogs {
+        create("edcLibs") {
+            from(files("gradle/edc-libs.versions.toml"))
+        }
+    }
     repositories {
         maven {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots/")

@@ -1,4 +1,3 @@
-version: "3"
 services:
   edc:
     container_name: edc
@@ -6,6 +5,7 @@ services:
       context: ./connector
     environment:
       - MY_EDC_NAME
+      - MY_PARTICIPANT_ID
       - MY_EDC_FQDN
       - MY_EDC_PROTOCOL
       - EDC_KEYSTORE_PASSWORD
@@ -13,13 +13,13 @@ services:
       - EDC_OAUTH_CLIENT_ID
       - EDC_OAUTH_PROVIDER_JWKS_URL
       - EDC_OAUTH_TOKEN_URL
-      - EDC_EDR_STATE-MACHINE_EXPIRED-RETENTION=5
     ports:
       - 11001:11001
       - 11002:11002
       - 11003:11003
       - 11004:11004
       - 11005:11005
+      - 11006:11006
     user: ${CONNECTOR_UID}:${CONNECTOR_GID}
     volumes:
       - ./vault:/vault
@@ -51,14 +51,22 @@ services:
       - ./db/home:/home/${LOGNAME}
       - /etc/passwd:/etc/passwd:ro
 
+  swagger-ui:
+    container_name: swagger-ui
+    image: swaggerapi/swagger-ui:v5.17.14
+    environment:
+      URLS: '[ { url: "http://localhost:11000/openapi/management.yaml", name: "Management API" }, { url: "http://localhost:11000/openapi/catalog.yaml", name: "Catalog API" } ]'
+    ports:
+      - 11000:8080
+    volumes:
+      - ./openapi/yaml:/usr/share/nginx/html/openapi
+
   edc-another:
     container_name: edc-another
     build:
       context: ./connector
     env_file:
       - ./.env_another
-    environment:
-      - EDC_EDR_STATE-MACHINE_EXPIRED-RETENTION=5
     ports:
       - 21001:11001
       - 21002:11002

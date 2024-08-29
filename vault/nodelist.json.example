@@ -1,0 +1,8 @@
+[
+  {
+    "name": "test-1",
+    "url": "http://edc:11003/api/v1/dsp",
+    "id": "1",
+    "supportedProtocols": "dataspace-protocol-http"
+  }
+]

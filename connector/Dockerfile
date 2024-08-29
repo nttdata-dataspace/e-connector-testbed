@@ -11,7 +11,7 @@ COPY ./build/libs/connector.jar /app
 COPY ./.env /app/.env
 COPY ./.env_postgresql /app/.env_postgresql
 COPY ./.env_datasource /app/.env_datasource
-RUN touch /app/empty.properties
+COPY ./connector.properties /app/connector.properties
 
 # This allows env vars in .env to be set as default values and overridden by docker-compose.
 RUN sed -ri 's/^\s*(\S+)=(.*)$/\1=${\1:-"\2"}/' .env

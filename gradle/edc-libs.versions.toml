@@ -136,6 +136,12 @@ edc-identity-trust-sts-core = { module = "org.eclipse.edc:identity-trust-sts-cor
 edc-identity-trust-sts-api = { module = "org.eclipse.edc:identity-trust-sts-api", version.ref = "edc" }
 edc-identity-trust-sts-client-configuration = { module = "org.eclipse.edc:identity-trust-sts-client-configuration", version.ref = "edc" }
 
+# Federated Catalog modules
+edc-fc-spi-crawler = { module = "org.eclipse.edc:crawler-spi", version.ref = "edc" }
+edc-fc-core = { module = "org.eclipse.edc:federated-catalog-core", version.ref = "edc" }
+edc-fc-api = { module = "org.eclipse.edc:federated-catalog-api", version.ref = "edc" }
+edc-fc-sql-cache = { module = "org.eclipse.edc:federated-catalog-cache-sql", version.ref = "edc" }
+
 ## IH for testing
 
 edc-ih-api-presentation = { module = "org.eclipse.edc:presentation-api", version.ref = "edc" }

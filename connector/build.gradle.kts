@@ -1,68 +1,79 @@
 plugins {
     `java-library`
     application
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.swagger)
 }
 
-val edcGroup: String by project
-val edcVersion: String by project
 val txEdcGroup: String by project
 val txEdcVersion: String by project
 val sovityEdcGroup: String by project
 val sovityEdcVersion: String by project
 
 dependencies {
-    implementation("${edcGroup}:control-plane-core:${edcVersion}")
-    //implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
-    implementation("${edcGroup}:control-plane-api-client:${edcVersion}")
-    implementation("${edcGroup}:callback-event-dispatcher:${edcVersion}")
-    implementation("${edcGroup}:callback-http-dispatcher:${edcVersion}")
-    implementation("${edcGroup}:management-api:${edcVersion}")
-    implementation("${edcGroup}:api-observability:${edcVersion}")
-    implementation("${edcGroup}:auth-tokenbased:${edcVersion}")
-    implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
-    implementation("${edcGroup}:vault-filesystem:${edcVersion}")
+    implementation(project(":extensions:vault-fs"))
+    implementation(project(":extensions:oauth2-core"))
+    implementation(project(":extensions:federated-catalog-filebased"))
+    implementation(project(":extensions:swagger-ui"))
+    implementation("${sovityEdcGroup}:policy-referring-connector:${sovityEdcVersion}")
 
-    implementation("${edcGroup}:dsp:${edcVersion}")
-    implementation("${edcGroup}:oauth2-core:${edcVersion}")
-    implementation("${edcGroup}:oauth2-daps:${edcVersion}")
+    implementation(edcLibs.edc.core.connector)
+    implementation(edcLibs.edc.core.controlplane)
+    implementation(edcLibs.edc.config.filesystem)
+    implementation(edcLibs.edc.auth.tokenbased)
+    implementation(edcLibs.edc.validator.data.address.http.data)
+    implementation(edcLibs.edc.data.plane.selector.control.api)
 
-    implementation("${edcGroup}:data-plane-core:${edcVersion}")
-    //implementation("${edcGroup}:data-plane-api:${edcVersion}")
-    implementation(project(":extensions:data-plane-api"))
-    implementation(project(":extensions:data-plane-annex-util"))
-    implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
-    implementation("${edcGroup}:transfer-pull-http-dynamic-receiver:${edcVersion}")
-    implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    implementation("${edcGroup}:data-plane-selector-api:${edcVersion}")
-    implementation("${edcGroup}:data-plane-selector-client:${edcVersion}")
-    implementation("${edcGroup}:data-plane-http:${edcVersion}")
-    implementation("${edcGroup}:validator-data-address-http-data:${edcVersion}")
+    implementation(edcLibs.edc.api.management)
+    implementation(edcLibs.edc.api.controlplane)
+    implementation(edcLibs.edc.api.control.config)
+    implementation(edcLibs.edc.api.observability)
 
-    implementation("${txEdcGroup}:dataplane-selector-configuration:${txEdcVersion}")
-    implementation("${txEdcGroup}:cx-oauth2:${txEdcVersion}")
-    implementation("${txEdcGroup}:edr-core:${txEdcVersion}")
-    implementation("${txEdcGroup}:edr-cache-core:${txEdcVersion}")
-    implementation("${txEdcGroup}:edr-api:${txEdcVersion}")
-    implementation("${txEdcGroup}:edr-callback:${txEdcVersion}")
+    implementation(edcLibs.edc.dsp)
+    implementation(edcLibs.edc.dpf.transfer.signaling)
+    implementation(edcLibs.edc.dpf.selector.core)
+
+    implementation(edcLibs.edc.ext.http)
+    implementation(edcLibs.edc.transfer.dynamicreceiver)
+    implementation(edcLibs.edc.controlplane.callback.dispatcher.event)
+    implementation(edcLibs.edc.controlplane.callback.dispatcher.http)
+    implementation(edcLibs.bundles.edc.monitoring)
+
+    implementation(edcLibs.edc.dpf.core)
+    implementation(edcLibs.edc.controlplane.apiclient)
+    implementation(edcLibs.edc.data.plane.self.registration)
+    implementation(edcLibs.edc.dpf.api.control)
+    implementation(edcLibs.edc.dpf.api.signaling)
+    implementation(edcLibs.edc.dpf.http)
+    implementation(edcLibs.edc.dpf.api.public.v2)
+
+    implementation(edcLibs.edc.core.edrstore)
+
+    implementation(edcLibs.edc.fc.core)
+    implementation(edcLibs.edc.fc.api)
 
     implementation(libs.postgres)
-    implementation("${edcGroup}:sql-core:${edcVersion}")
-    implementation("${edcGroup}:sql-pool-apache-commons:${edcVersion}")
-    implementation("${edcGroup}:transaction-local:${edcVersion}")
-    implementation("${edcGroup}:control-plane-sql:${edcVersion}")
-    implementation("${txEdcGroup}:edr-cache-sql:${txEdcVersion}")
-
-    implementation("${sovityEdcGroup}:policy-referring-connector:${sovityEdcVersion}")
-    implementation(project(":extensions:policies"))
+    implementation(edcLibs.edc.transaction.local)
+    implementation(edcLibs.edc.sql.pool)
+    implementation(edcLibs.edc.sql.assetindex)
+    implementation(edcLibs.edc.sql.policydef)
+    implementation(edcLibs.edc.sql.contract.definition)
+    implementation(edcLibs.edc.sql.contract.negotiation)
+    implementation(edcLibs.edc.sql.transferprocess)
+    implementation(edcLibs.edc.sql.edrindex)
+    implementation(edcLibs.edc.sql.accesstokendata)
+    implementation(edcLibs.edc.sql.dataplane)
 }
 
 application {
     mainClass.set("org.eclipse.edc.boot.system.runtime.BaseRuntime")
 }
 
+var distZip = tasks.getByName("distZip")
+var distTar = tasks.getByName("distTar")
+
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-    exclude("de/sovity/edc/extension/policy/ReferringConnectorValidationExtension.class")
     mergeServiceFiles()
     archiveFileName.set("connector.jar")
+    dependsOn(distZip, distTar)
 }

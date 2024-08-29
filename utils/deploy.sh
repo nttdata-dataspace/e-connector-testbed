@@ -61,7 +61,7 @@ if [ -f ${OUTDIR}/key.pem ] && [ -f ${OUTDIR}/cert.pem ]; then
   echo -e "\nA private key/certificate pair detected. The pair is preserved and a new keystore will be created."
 else
   echo -e "\nGenerating a new key and certificate..."
-  SUBJ_ARG="/C=JP/ST=Tokyo/L=Bunkyo-ku/O=Hongo/OU=International Testbed of Dataspace Technology/CN=${MY_EDC_FQDN:-${MY_EDC_NAME}}"
+  SUBJ_ARG="/C=JP/ST=Tokyo/L=Bunkyo-ku/O=Hongo/OU=International Testbed of Dataspace Technologies/CN=${MY_EDC_FQDN:-${MY_EDC_NAME}}"
 
   ${OPENSSL_PATH} req -x509 -newkey rsa:2048 -noenc -days 1000 -subj "${SUBJ_ARG}" \
         -keyout ${OUTDIR}/key.pem -out ${OUTDIR}/cert.pem
