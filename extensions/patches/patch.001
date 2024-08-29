@@ -1,8 +1,8 @@
 diff --git a/extensions/policy-referring-connector/build.gradle.kts b/extensions/policy-referring-connector/build.gradle.kts
-index c7fa700..f1cf044 100644
+index 1df2e5ac..66b0373b 100644
 --- a/extensions/policy-referring-connector/build.gradle.kts
 +++ b/extensions/policy-referring-connector/build.gradle.kts
-@@ -21,6 +21,15 @@ tasks.withType<Test> {
+@@ -23,6 +23,15 @@ tasks.withType<Test> {
  
  group = libs.versions.sovityEdcExtensionGroup.get()
  
@@ -19,7 +19,7 @@ index c7fa700..f1cf044 100644
      publications {
          create<MavenPublication>(project.name) {
 diff --git a/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/ReferringConnectorValidationExtension.java b/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/ReferringConnectorValidationExtension.java
-index 61033b8..35435fd 100644
+index 61033b8c..35435fd5 100644
 --- a/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/ReferringConnectorValidationExtension.java
 +++ b/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/ReferringConnectorValidationExtension.java
 @@ -101,6 +101,7 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
@@ -30,24 +30,3 @@ index 61033b8..35435fd 100644
          ruleBindingRegistry.bind(REFERRING_CONNECTOR_CONSTRAINT_KEY, ContractValidationService.NEGOTIATION_SCOPE);
          ruleBindingRegistry.bind(REFERRING_CONNECTOR_CONSTRAINT_KEY, ContractDefinitionResolver.CATALOGING_SCOPE);
  
-diff --git a/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java b/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java
-index 8fb09c3..130005b 100644
---- a/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java
-+++ b/extensions/policy-referring-connector/src/main/java/de/sovity/edc/extension/policy/functions/AbstractReferringConnectorValidation.java
-@@ -26,6 +26,7 @@ package de.sovity.edc.extension.policy.functions;
- 
- import org.eclipse.edc.policy.engine.spi.PolicyContext;
- import org.eclipse.edc.policy.model.Operator;
-+import org.eclipse.edc.spi.agent.ParticipantAgent;
- import org.eclipse.edc.spi.monitor.Monitor;
- 
- import java.util.Arrays;
-@@ -69,7 +70,7 @@ public abstract class AbstractReferringConnectorValidation {
-             return false;
-         }
- 
--        final var claims = policyContext.getParticipantAgent().getClaims();
-+        final var claims = policyContext.getContextData(ParticipantAgent.class).getClaims();
- 
-         if (!claims.containsKey(REFERRING_CONNECTOR_CLAIM)) {
-             return false;
