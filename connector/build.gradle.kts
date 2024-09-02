@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":extensions:vault-fs"))
     implementation(project(":extensions:oauth2-core"))
     implementation(project(":extensions:federated-catalog-filebased"))
-    implementation(project(":extensions:swagger-ui"))
     implementation("${sovityEdcGroup}:policy-referring-connector:${sovityEdcVersion}")
 
     implementation(edcLibs.edc.core.connector)
@@ -28,6 +27,7 @@ dependencies {
     implementation(edcLibs.edc.api.controlplane)
     implementation(edcLibs.edc.api.control.config)
     implementation(edcLibs.edc.api.observability)
+    implementation(edcLibs.edc.api.edrcache)
 
     implementation(edcLibs.edc.dsp)
     implementation(edcLibs.edc.dpf.transfer.signaling)

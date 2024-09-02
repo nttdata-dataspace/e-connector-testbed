@@ -11,6 +11,104 @@ servers:
       port:
         default: '11002'
 paths:
+  /v1/edrs/request:
+    post:
+      deprecated: true
+      description: Request all Edr entries according to a particular query
+      operationId: requestEdrEntriesV1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuerySpec"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EndpointDataReferenceEntry"
+          description: The edr entries matching the query
+        "400":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: Request body was malformed
+      tags:
+      - EDR Cache V1
+  /v1/edrs/{transferProcessId}:
+    delete:
+      deprecated: true
+      description: Removes an EDR entry given the transfer process ID
+      operationId: removeEdrEntryV1
+      parameters:
+      - in: path
+        name: transferProcessId
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: EDR entry was deleted successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: "Request was malformed, e.g. id was null"
+        "404":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: An EDR entry with the given ID does not exist
+      tags:
+      - EDR Cache V1
+  /v1/edrs/{transferProcessId}/dataaddress:
+    get:
+      deprecated: true
+      description: Gets the EDR data address with the given transfer process ID
+      operationId: getEdrEntryDataAddressV1
+      parameters:
+      - in: path
+        name: transferProcessId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataAddress"
+          description: The data address
+        "400":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: "Request was malformed, e.g. id was null"
+        "404":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: An EDR data address with the given transfer process ID does
+            not exist
+      tags:
+      - EDR Cache V1
   /v2/catalog/dataset/request:
     post:
       deprecated: true
@@ -1703,6 +1801,102 @@ paths:
           description: A contract negotiation with the given ID does not exist
       tags:
       - Contract Negotiation V3
+  /v3/edrs/request:
+    post:
+      description: Request all Edr entries according to a particular query
+      operationId: requestEdrEntriesV3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuerySpec"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EndpointDataReferenceEntry"
+          description: The edr entries matching the query
+        "400":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: Request body was malformed
+      tags:
+      - EDR Cache V3
+  /v3/edrs/{transferProcessId}:
+    delete:
+      description: Removes an EDR entry given the transfer process ID
+      operationId: removeEdrEntryV3
+      parameters:
+      - in: path
+        name: transferProcessId
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: EDR entry was deleted successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: "Request was malformed, e.g. id was null"
+        "404":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: An EDR entry with the given ID does not exist
+      tags:
+      - EDR Cache V3
+  /v3/edrs/{transferProcessId}/dataaddress:
+    get:
+      deprecated: true
+      description: Gets the EDR data address with the given transfer process ID
+      operationId: getEdrEntryDataAddressV3
+      parameters:
+      - in: path
+        name: transferProcessId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataAddress"
+          description: The data address
+        "400":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: "Request was malformed, e.g. id was null"
+        "404":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+          description: An EDR data address with the given transfer process ID does
+            not exist
+      tags:
+      - EDR Cache V3
   /v3/policydefinitions:
     post:
       description: Creates a new policy definition
@@ -2651,6 +2845,24 @@ components:
           type: string
         querySpec:
           $ref: "#/components/schemas/QuerySpec"
+    EndpointDataReferenceEntry:
+      type: object
+      example:
+        '@context':
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
+        '@id': transfer-process-id
+        transferProcessId: transfer-process-id
+        agreementId: agreement-id
+        contractNegotiationId: contract-negotiation-id
+        assetId: asset-id
+        providerId: provider-id
+        createdAt: 1688465655
+      properties:
+        '@id':
+          type: string
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/EndpointDataReferenceEntry
     IdResponse:
       type: object
       example:
@@ -3023,4 +3235,4 @@ components:
       in: header
       name: X-Api-Key
 security:
-  - ApiKeyAuth: [] 
+  - ApiKeyAuth: []
