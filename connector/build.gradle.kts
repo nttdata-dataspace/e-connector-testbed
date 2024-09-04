@@ -48,6 +48,7 @@ dependencies {
     implementation(edcLibs.edc.dpf.api.public.v2)
 
     implementation(edcLibs.edc.core.edrstore)
+    implementation(edcLibs.edc.edr.store.receiver)
 
     implementation(edcLibs.edc.fc.core)
     implementation(edcLibs.edc.fc.api)
